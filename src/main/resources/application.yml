@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: GalaxyAuto
+    
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_galaxy_auto
+    username: postgres
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
