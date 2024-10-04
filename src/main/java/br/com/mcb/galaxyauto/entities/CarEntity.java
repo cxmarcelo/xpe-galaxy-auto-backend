@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import br.com.mcb.galaxyauto.enums.CarStatusEnum;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,14 +22,27 @@ public class CarEntity {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
+	@Column(nullable = false)
 	private String name;
+
+	@Column(nullable = false)
 	private String brand;
+
+	private String plate;
 	private String description;
+
+	@Column(nullable = false)
 	private BigDecimal price;
+
 	private String imageUrl;
+
+	@Column(nullable = false)
 	private String status;
 
+	@Column(nullable = false)
 	private LocalDateTime createDate;
+
+	@Column(nullable = false)
 	private LocalDateTime lastUpdate;
 
 

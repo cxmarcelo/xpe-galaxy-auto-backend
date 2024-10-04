@@ -5,8 +5,16 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/db_galaxy_auto
     username: postgres
-    password: admin
+    password: postgres
   jpa:
     hibernate:
       ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+    
+aws:
+  accessKeyId: ${AWS_ACCESS_KEY_ID}
+  secretKey: ${AWS_SECRET_KEY}
+  region: us-east-1
+  s3:
+    bucketName: xpe-galaxy-autos

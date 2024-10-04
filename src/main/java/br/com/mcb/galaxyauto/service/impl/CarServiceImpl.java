@@ -3,11 +3,13 @@ package br.com.mcb.galaxyauto.service.impl;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.mcb.galaxyauto.dto.CarCreateUpdateDto;
+import br.com.mcb.galaxyauto.dto.CarCreateDto;
+import br.com.mcb.galaxyauto.dto.CarDto;
 import br.com.mcb.galaxyauto.entities.CarEntity;
 import br.com.mcb.galaxyauto.enums.CarStatusEnum;
 import br.com.mcb.galaxyauto.exceptions.ObjectNotFoundException;
@@ -18,6 +20,7 @@ import jakarta.validation.Valid;
 @Service
 public class CarServiceImpl implements CarService {
 
+	@Autowired
 	private CarRepository carRepository;
 
 	@Override
@@ -31,15 +34,17 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public CarEntity save(@Valid CarCreateUpdateDto carDto) {
+	public CarEntity save(CarCreateDto carDto, String imageUrl) {
 		CarEntity carEntity = new CarEntity();
 		BeanUtils.copyProperties(carDto, carEntity);
 		carEntity.setStatus(CarStatusEnum.toEnum(carDto.getStatus()));
+		carEntity.setImageUrl(imageUrl);
+		
 		return carRepository.save(carEntity);
 	}
 
 	@Override
-	public CarEntity update(UUID carId, CarCreateUpdateDto carDto) {
+	public CarEntity update(UUID carId, CarDto carDto) {
 		CarEntity carEntity = this.findById(carId);
 
 		carEntity.setName(carDto.getName());

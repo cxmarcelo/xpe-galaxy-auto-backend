@@ -5,7 +5,8 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import br.com.mcb.galaxyauto.dto.CarCreateUpdateDto;
+import br.com.mcb.galaxyauto.dto.CarCreateDto;
+import br.com.mcb.galaxyauto.dto.CarDto;
 import br.com.mcb.galaxyauto.entities.CarEntity;
 
 public interface CarService {
@@ -14,9 +15,9 @@ public interface CarService {
 
 	CarEntity findById(UUID carId);
 
-	CarEntity update(UUID carId, CarCreateUpdateDto carDto);
+	CarEntity update(UUID carId, CarDto carDto);
 
-	CarEntity save(CarCreateUpdateDto carDto);
+	CarEntity save(CarCreateDto carDto, String imageUrl);
 
 	void delete(UUID carId);
 

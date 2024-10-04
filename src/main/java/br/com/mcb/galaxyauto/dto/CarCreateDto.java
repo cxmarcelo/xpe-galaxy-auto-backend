@@ -9,13 +9,17 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CarCreateUpdateDto {
+public class CarCreateDto {
+
 
 	@NotBlank
 	private String name;
 
 	@NotBlank
 	private String brand;
+	
+	@NotBlank
+	private String plate;
 
 	@NotBlank
 	private String description;
@@ -23,11 +27,6 @@ public class CarCreateUpdateDto {
 	@NotNull
 	private BigDecimal price;
 
-	//TODO
-	@NotNull
-	private String imageUrl;
-
-	//TODO custom validation
 	@NotBlank
 	private String status;
 
