@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import br.com.mcb.galaxyauto.dto.CarCreateDto;
 import br.com.mcb.galaxyauto.dto.CarDto;
 import br.com.mcb.galaxyauto.entities.CarEntity;
+import jakarta.validation.Valid;
 
 public interface CarService {
 
@@ -15,9 +16,11 @@ public interface CarService {
 
 	CarEntity findById(UUID carId);
 
-	CarEntity update(UUID carId, CarDto carDto);
-
+	CarEntity update(UUID carId, @Valid CarDto carUpdateDto);
+	
 	CarEntity save(CarCreateDto carDto, String imageUrl);
+
+	CarEntity updateImage(UUID carId, String imageUrl);
 
 	void delete(UUID carId);
 

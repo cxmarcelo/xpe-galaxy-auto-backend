@@ -8,7 +8,6 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.RegionUtils;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
@@ -24,23 +23,19 @@ public class AmazonS3Config {
 	@Value("${aws.region}")
 	private String region;
 
-	
-    public AWSCredentials credentials() {
-    	System.out.println("Teste credentiasl");
-    	System.out.println(accessKeyId);
-    	System.out.println(secretKey);
-    	System.out.println("--------------------------------------");
-        AWSCredentials credentials = new BasicAWSCredentials(
-        		accessKeyId,
-        		secretKey
-        );
-        return credentials;
-    }
-    
+
+	public AWSCredentials credentials() {
+		AWSCredentials credentials = new BasicAWSCredentials(
+				accessKeyId,
+				secretKey
+				);
+		return credentials;
+	}
+
 	@Bean
 	AmazonS3 s3Client() {
 		return AmazonS3ClientBuilder.standard()
-				.withRegion(Regions.US_EAST_1)
+				.withRegion(RegionUtils.getRegion(region).getName())
 				.withCredentials(new AWSStaticCredentialsProvider(credentials()))
 				.build();
 	}

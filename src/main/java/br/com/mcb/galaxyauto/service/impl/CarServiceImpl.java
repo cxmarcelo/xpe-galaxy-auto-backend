@@ -39,7 +39,7 @@ public class CarServiceImpl implements CarService {
 		BeanUtils.copyProperties(carDto, carEntity);
 		carEntity.setStatus(CarStatusEnum.toEnum(carDto.getStatus()));
 		carEntity.setImageUrl(imageUrl);
-		
+
 		return carRepository.save(carEntity);
 	}
 
@@ -60,6 +60,13 @@ public class CarServiceImpl implements CarService {
 	public void delete(UUID carId) {
 		CarEntity carEntity = findById(carId);
 		carRepository.delete(carEntity);
+	}
+
+	@Override
+	public CarEntity updateImage(UUID carId, String imageUrl) {
+		CarEntity carEntity = findById(carId);
+		carEntity.setImageUrl(imageUrl);
+		return carRepository.save(carEntity);
 	}
 
 }
