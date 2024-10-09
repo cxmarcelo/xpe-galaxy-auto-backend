@@ -12,10 +12,10 @@ import br.com.mcb.galaxyauto.dto.CarCreateDto;
 import br.com.mcb.galaxyauto.dto.CarDto;
 import br.com.mcb.galaxyauto.entities.CarEntity;
 import br.com.mcb.galaxyauto.enums.CarStatusEnum;
+import br.com.mcb.galaxyauto.exceptions.DataIntegrityException;
 import br.com.mcb.galaxyauto.exceptions.ObjectNotFoundException;
 import br.com.mcb.galaxyauto.repositories.CarRepository;
 import br.com.mcb.galaxyauto.service.CarService;
-import jakarta.validation.Valid;
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -30,7 +30,7 @@ public class CarServiceImpl implements CarService {
 
 	@Override
 	public CarEntity findById(UUID carId) {
-		return carRepository.findById(carId).orElseThrow(() -> new ObjectNotFoundException("Car not found. Id: " + carId));
+		return carRepository.findById(carId).orElseThrow(() -> new ObjectNotFoundException("Carro não encontrado. Id: " + carId));
 	}
 
 	@Override
@@ -46,6 +46,11 @@ public class CarServiceImpl implements CarService {
 	@Override
 	public CarEntity update(UUID carId, CarDto carDto) {
 		CarEntity carEntity = this.findById(carId);
+
+		if(!(CarStatusEnum.AVAILABLE.equals(carEntity.getStatus()) 
+				|| CarStatusEnum.UNAVAILABLE.equals(carEntity.getStatus()))) {
+			throw new DataIntegrityException("Não é possível editar carros com status diferente de Disponível ou Indisponível");
+		}
 
 		carEntity.setName(carDto.getName());
 		carEntity.setBrand(carDto.getBrand());

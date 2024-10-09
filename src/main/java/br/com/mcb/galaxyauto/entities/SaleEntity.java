@@ -2,54 +2,55 @@ package br.com.mcb.galaxyauto.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import br.com.mcb.galaxyauto.enums.CarStatusEnum;
+import br.com.mcb.galaxyauto.enums.SaleStatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Data;
 
 @Entity
 @Data
-public class CarEntity {
+public class SaleEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
 	@Column(nullable = false)
-	private String name;
+	private UUID sellerId;
 
 	@Column(nullable = false)
-	private String brand;
+	private String sellerName;
 
-	private String plate;
-	private String description;
+	@ManyToOne
+	@JoinColumn(name = "car_id", nullable = false)
+	private CarEntity car;
 
 	@Column(nullable = false)
-	private BigDecimal price;
+	private String clientName;
 
-	private String imageUrl;
+	@Column(nullable = false)
+	private String clientCpfOrCnpj;
 
 	@Column(nullable = false)
 	private String status;
+
+	@Column(nullable = false)
+	private BigDecimal commission;
 
 	@Column(nullable = false)
 	private LocalDateTime createDate;
 
 	@Column(nullable = false)
 	private LocalDateTime lastUpdate;
-	
-	@OneToMany(mappedBy = "car")
-	private List<SaleEntity> sales = new ArrayList<SaleEntity>();
 
 
 	@PrePersist
@@ -63,12 +64,13 @@ public class CarEntity {
 		lastUpdate = LocalDateTime.now();
 	}
 
-	public CarStatusEnum getStatus() {
-		return CarStatusEnum.toEnum(status);
+	public SaleStatusEnum getStatus() {
+		return SaleStatusEnum.toEnum(this.status);
 	}
 
-	public void setStatus(CarStatusEnum status) {
+	public void setStatus(SaleStatusEnum status) {
 		this.status = status.getCode();
 	}
+
 
 }
