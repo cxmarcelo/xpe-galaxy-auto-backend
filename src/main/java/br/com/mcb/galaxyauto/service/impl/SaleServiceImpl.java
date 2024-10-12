@@ -1,6 +1,5 @@
 package br.com.mcb.galaxyauto.service.impl;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import br.com.mcb.galaxyauto.exceptions.DataIntegrityException;
 import br.com.mcb.galaxyauto.exceptions.ObjectNotFoundException;
 import br.com.mcb.galaxyauto.repositories.CarRepository;
 import br.com.mcb.galaxyauto.repositories.SaleRepository;
+import br.com.mcb.galaxyauto.service.CommissionCalculationService;
 import br.com.mcb.galaxyauto.service.SaleService;
 
 @Service
@@ -28,6 +28,9 @@ public class SaleServiceImpl implements SaleService {
 
 	@Autowired
 	private CarRepository carRepository;
+
+	@Autowired
+	private CommissionCalculationService commissionCalculationService;
 
 	@Override
 	public SaleEntity findById(UUID id) {
@@ -61,8 +64,7 @@ public class SaleServiceImpl implements SaleService {
 
 		saleEntity.setStatus(SaleStatusEnum.PENDENT);
 
-		//TODO
-		saleEntity.setCommission(new BigDecimal(100));
+		saleEntity.setCommission(commissionCalculationService.calculateCommission(carEntity.getPrice()));
 
 
 		return saleRepository.save(saleEntity);
@@ -80,7 +82,7 @@ public class SaleServiceImpl implements SaleService {
 		saleEntity.setClientName(saleUpdateDto.getClientName());
 		saleEntity.setClientCpfOrCnpj(saleUpdateDto.getClientCpfOrCnpj());
 		saleEntity.setCommission(saleUpdateDto.getCommission());
-		
+
 		return saleRepository.save(saleEntity);
 	}
 
@@ -105,7 +107,6 @@ public class SaleServiceImpl implements SaleService {
 			throw new DataIntegrityException("Não é possível rejeitar uma venda com status diferente de pendente.");
 		}
 
-		//TODO check if will update
 		saleEntity.getCar().setStatus(CarStatusEnum.AVAILABLE);
 		saleEntity.setStatus(SaleStatusEnum.REJECTED);
 		return saleRepository.save(saleEntity);
