@@ -7,7 +7,7 @@ public enum SaleStatusEnum {
 	APPROVED("APPROVED"),
 	;
 
-	String code;
+	private String code;
 
 	private SaleStatusEnum(String code) {
 		this.code = code;

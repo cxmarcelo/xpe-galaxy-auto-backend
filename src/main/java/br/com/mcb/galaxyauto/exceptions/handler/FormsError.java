@@ -1,25 +1,27 @@
 package br.com.mcb.galaxyauto.exceptions.handler;
 
-import java.io.Serializable;
+import java.util.List;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class StandardError implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class FormsError {
 
 	private Integer status;
 	private String msg;
 	private Long timeStamp;
-	private String code = ExceptionErrorCodeEnum.STANDARD_ERROR.getCode();
+	private List<FormFieldError> errors;
+	
+	private String code = ExceptionErrorCodeEnum.FORM_FIELD_ERROR_LIST.getCode();
 
-	public StandardError(Integer status, String msg, Long timeStamp) {
+	public FormsError(Integer status, String msg, Long timeStamp, List<FormFieldError> errors) {
 		super();
 		this.status = status;
 		this.msg = msg;
 		this.timeStamp = timeStamp;
+		this.errors = errors;
 	}
-
+	
 }

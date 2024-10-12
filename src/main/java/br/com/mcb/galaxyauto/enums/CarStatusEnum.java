@@ -8,7 +8,7 @@ public enum CarStatusEnum {
 	SOLD("SOLD"),
 	;
 
-	String code;
+	private String code;
 
 	private CarStatusEnum(String code) {
 		this.code = code;
