@@ -11,12 +11,14 @@ import br.com.mcb.galaxyauto.dto.SaleCreateDto;
 import br.com.mcb.galaxyauto.dto.SaleUpdateDto;
 import br.com.mcb.galaxyauto.entities.CarEntity;
 import br.com.mcb.galaxyauto.entities.SaleEntity;
+import br.com.mcb.galaxyauto.entities.UserEntity;
 import br.com.mcb.galaxyauto.enums.CarStatusEnum;
 import br.com.mcb.galaxyauto.enums.SaleStatusEnum;
 import br.com.mcb.galaxyauto.exceptions.DataIntegrityException;
 import br.com.mcb.galaxyauto.exceptions.ObjectNotFoundException;
 import br.com.mcb.galaxyauto.repositories.CarRepository;
 import br.com.mcb.galaxyauto.repositories.SaleRepository;
+import br.com.mcb.galaxyauto.repositories.UserRepository;
 import br.com.mcb.galaxyauto.service.CommissionCalculationService;
 import br.com.mcb.galaxyauto.service.SaleService;
 
@@ -32,6 +34,9 @@ public class SaleServiceImpl implements SaleService {
 	@Autowired
 	private CommissionCalculationService commissionCalculationService;
 
+	@Autowired
+	private UserRepository userRepository;
+
 	@Override
 	public SaleEntity findById(UUID id) {
 		SaleEntity saleEntity = saleRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Venda não encontrada. Id: " + id));
@@ -44,9 +49,12 @@ public class SaleServiceImpl implements SaleService {
 	}
 
 	@Override
-	public SaleEntity saveSale(SaleCreateDto saleCreateDto) {
+	public SaleEntity saveSale(SaleCreateDto saleCreateDto, String userId) {
 		CarEntity carEntity = carRepository.findById(saleCreateDto.getCarId())
 				.orElseThrow(() -> new ObjectNotFoundException("Carro não encontrado. Id: " + saleCreateDto.getCarId()));
+		
+		//TODO Convert
+        UserEntity userEntity = userRepository.findById(UUID.fromString(userId)).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado."));
 
 		if(!carEntity.getStatus().equals(CarStatusEnum.AVAILABLE)) {
 			throw new DataIntegrityException("Carro não está disponível.");
@@ -59,8 +67,7 @@ public class SaleServiceImpl implements SaleService {
 		saleEntity.setClientName(saleCreateDto.getClientName());
 		saleEntity.setClientCpfOrCnpj(saleCreateDto.getClientCpfOrCnpj());
 
-		saleEntity.setSellerId(UUID.fromString("a7975941-55bd-4904-9e1b-4e90b026cb6b"));
-		saleEntity.setSellerName("Marcelo Mock");
+		saleEntity.setSeller(userEntity);
 
 		saleEntity.setStatus(SaleStatusEnum.PENDENT);
 

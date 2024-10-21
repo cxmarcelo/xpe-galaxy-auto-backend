@@ -24,11 +24,9 @@ public class SaleEntity {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
-	@Column(nullable = false)
-	private UUID sellerId;
-
-	@Column(nullable = false)
-	private String sellerName;
+	@ManyToOne
+    @JoinColumn(name = "user_id")
+	private UserEntity seller;
 
 	@ManyToOne
 	@JoinColumn(name = "car_id", nullable = false)
@@ -51,7 +49,6 @@ public class SaleEntity {
 
 	@Column(nullable = false)
 	private LocalDateTime lastUpdate;
-
 
 	@PrePersist
 	public void prePersist() {

@@ -32,6 +32,11 @@ public class SaleDto {
 		if(saleEntity.getCar() != null) {
 			this.car = new CarDto(saleEntity.getCar());
 		}
+		
+		if(saleEntity.getSeller() != null) {
+			this.sellerId = saleEntity.getSeller().getId();
+			this.sellerName = saleEntity.getSeller().getName();
+		}
 	}
 
 }

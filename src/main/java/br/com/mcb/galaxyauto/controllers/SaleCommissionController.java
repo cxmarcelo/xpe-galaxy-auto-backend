@@ -27,7 +27,7 @@ import br.com.mcb.galaxyauto.service.xls.exports.SaleCommissionExport;
 
 @RestController
 @RequestMapping("/sales/commissions")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "Authorization")
 public class SaleCommissionController {
 
 	@Autowired

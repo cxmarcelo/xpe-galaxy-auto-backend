@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +28,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/sales")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "Authorization")
 public class SaleController {
 
 	@Autowired
@@ -48,8 +50,9 @@ public class SaleController {
 	}
 
 	@PostMapping
-	public ResponseEntity<SaleDto> saveSale(@Valid @RequestBody SaleCreateDto saleCreateDto) {
-		SaleEntity saleEntity = saleService.saveSale(saleCreateDto);
+	public ResponseEntity<SaleDto> saveSale(@Valid @RequestBody SaleCreateDto saleCreateDto, @AuthenticationPrincipal Jwt principal) {
+		String userId = principal.getClaimAsString("sub");
+		SaleEntity saleEntity = saleService.saveSale(saleCreateDto, userId);
 		SaleDto saleDto = new SaleDto(saleEntity);
 		return ResponseEntity.ok().body(saleDto);
 	}
