@@ -20,7 +20,7 @@ public interface SaleService {
 
 	SaleEntity rejectSale(UUID saleId);
 
-	SaleEntity saveSale(@Valid SaleCreateDto saleCreateDto, String userId);
+	SaleEntity saveSale(@Valid SaleCreateDto saleCreateDto, String username);
 
 	SaleEntity update(UUID saleId, SaleUpdateDto saleUpdateDto);
 

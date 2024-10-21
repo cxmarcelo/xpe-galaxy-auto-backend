@@ -1,5 +1,6 @@
 package br.com.mcb.galaxyauto.service.impl;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +50,23 @@ public class SaleServiceImpl implements SaleService {
 	}
 
 	@Override
-	public SaleEntity saveSale(SaleCreateDto saleCreateDto, String userId) {
+	public SaleEntity saveSale(SaleCreateDto saleCreateDto, String username) {
 		CarEntity carEntity = carRepository.findById(saleCreateDto.getCarId())
 				.orElseThrow(() -> new ObjectNotFoundException("Carro não encontrado. Id: " + saleCreateDto.getCarId()));
 		
 		//TODO Convert
-        UserEntity userEntity = userRepository.findById(UUID.fromString(userId)).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado."));
+        //UserEntity userEntity = userRepository.findById(username).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado."));
 
+		//work around to works
+		Optional<UserEntity> userEntityOptional = userRepository.findById(username);
+		UserEntity userEntity = null;
+		if(userEntityOptional.isPresent()) {
+			userEntity = userEntityOptional.get();
+		} else {
+			userEntity = createTempUser(username);
+		}
+		
+		
 		if(!carEntity.getStatus().equals(CarStatusEnum.AVAILABLE)) {
 			throw new DataIntegrityException("Carro não está disponível.");
 		}
@@ -75,6 +86,13 @@ public class SaleServiceImpl implements SaleService {
 
 
 		return saleRepository.save(saleEntity);
+	}
+
+	private UserEntity createTempUser(String username) {
+		UserEntity userEntity = new UserEntity();
+		userEntity.setUsername(username);
+		userEntity.setName(username);
+		return userRepository.save(userEntity);
 	}
 
 	@Override
