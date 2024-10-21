@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class SaleDto {
 
 	private UUID id;
-	private UUID sellerId;
+	private String sellerUsername;
 	private String sellerName;
 	private CarDto car;
 	private String clientName;
@@ -34,7 +34,7 @@ public class SaleDto {
 		}
 		
 		if(saleEntity.getSeller() != null) {
-			this.sellerId = saleEntity.getSeller().getId();
+			this.sellerUsername = saleEntity.getSeller().getUsername();
 			this.sellerName = saleEntity.getSeller().getName();
 		}
 	}

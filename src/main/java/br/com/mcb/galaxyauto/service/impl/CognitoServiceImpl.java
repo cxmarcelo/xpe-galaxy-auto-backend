@@ -25,8 +25,10 @@ import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
 import com.amazonaws.services.cognitoidp.model.RespondToAuthChallengeRequest;
 import com.amazonaws.services.cognitoidp.model.RespondToAuthChallengeResult;
 
+import br.com.mcb.galaxyauto.entities.UserEntity;
 import br.com.mcb.galaxyauto.exceptions.LoginFailException;
 import br.com.mcb.galaxyauto.exceptions.NewPasswordRequiredException;
+import br.com.mcb.galaxyauto.repositories.UserRepository;
 import br.com.mcb.galaxyauto.service.CognitoService;
 import lombok.extern.log4j.Log4j2;
 
@@ -45,6 +47,9 @@ public class CognitoServiceImpl implements CognitoService {
 
 	@Autowired
 	private AWSCognitoIdentityProvider cognitoClient;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@Override
 	public String login(String username, String password) {
@@ -98,8 +103,9 @@ public class CognitoServiceImpl implements CognitoService {
     }
 	
 	
-	//TODO
 	public AdminCreateUserResult createUser(String username, String email, String name, String cpf) {
+		//TODO
+		//check if user existis in local database.
 		
         List<AttributeType> attributes = new ArrayList<>();
         attributes.add(new AttributeType().withName("name").withValue(name));
@@ -112,6 +118,15 @@ public class CognitoServiceImpl implements CognitoService {
 				.withUserAttributes(attributes);
 		
 		AdminCreateUserResult response = cognitoClient.adminCreateUser(createUserRequest);
+		
+		
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername(response.getUser().getUsername());
+        userEntity.setEmail(email);
+        userEntity.setName(name);
+        userEntity.setCpf(cpf);
+        userRepository.save(userEntity);
+        
 		return response;
 	}
 
