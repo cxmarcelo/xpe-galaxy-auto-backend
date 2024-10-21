@@ -18,3 +18,11 @@ aws:
   region: us-east-1
   s3:
     bucketName: xpe-galaxy-autos
+  cognito:
+    userPoolId: us-east-1_6sF2byrsQ
+    jwkSetUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_6sF2byrsQ/.well-known/jwks.json
+    client:
+      name: api-xpe-galaxy-autos
+      id: 23cjqf663elcffe97g70egdvmo
+      secret: ${AWS_COGNITO_APP_SECRET}
+    

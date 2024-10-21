@@ -3,6 +3,8 @@ package br.com.mcb.galaxyauto.exceptions.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import br.com.mcb.galaxyauto.exceptions.DataIntegrityException;
 import br.com.mcb.galaxyauto.exceptions.DataIntegrityListException;
 import br.com.mcb.galaxyauto.exceptions.FileUploadFailException;
+import br.com.mcb.galaxyauto.exceptions.NewPasswordRequiredException;
 import br.com.mcb.galaxyauto.exceptions.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -60,4 +63,16 @@ public class ControllerExceptionHandler {
 		ErrorMessageList err = new ErrorMessageList(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis(), e.getErrorList());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
+	
+	@ExceptionHandler(NewPasswordRequiredException.class)
+	public ResponseEntity<LoginError> newPasswordRequiredException(NewPasswordRequiredException e, HttpServletRequest request){
+		LoginError err = new LoginError(HttpStatus.FORBIDDEN.value(), e.getMessage(), System.currentTimeMillis(), LoginErrorCodeEnum.NEW_PASSWORD_REQUIRED, e.getSession());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+	}
+	
+	@ExceptionHandler(LoginException.class)
+	public ResponseEntity<LoginError> loginException(LoginException e, HttpServletRequest request){
+		LoginError err = new LoginError(HttpStatus.FORBIDDEN.value(), e.getMessage(), System.currentTimeMillis(), LoginErrorCodeEnum.LOGIN_FAIL);
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+	}
 }

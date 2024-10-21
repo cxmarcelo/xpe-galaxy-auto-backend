@@ -96,7 +96,7 @@ public class SaleCommissionExport extends AbstractXlsExport {
 				break;
 
 			case SALLER_NAME:
-				createCell(row, columnIndex, cellStyle.getCellStyleCache().get(CellStyleEnum.DEFAULT), position.getSellerName());
+				createCell(row, columnIndex, cellStyle.getCellStyleCache().get(CellStyleEnum.DEFAULT), position.getSeller().getName());
 				break;
 
 			case CREATE_DATE:
