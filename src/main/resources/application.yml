@@ -1,28 +1,7 @@
 spring:
+  profiles:
+    active: ${CURRENT_ENV:dev}
+    
   application:
     name: GalaxyAuto
-    
-  datasource:
-    url: jdbc:postgresql://localhost:5432/db_galaxy_auto
-    username: postgres
-    password: postgres
-  jpa:
-    hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-
-    
-aws:
-  accessKeyId: ${AWS_ACCESS_KEY_ID}
-  secretKey: ${AWS_SECRET_KEY}
-  region: us-east-1
-  s3:
-    bucketName: xpe-galaxy-autos
-  cognito:
-    userPoolId: us-east-1_6sF2byrsQ
-    jwkSetUri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_6sF2byrsQ/.well-known/jwks.json
-    client:
-      name: api-xpe-galaxy-autos
-      id: 23cjqf663elcffe97g70egdvmo
-      secret: ${AWS_COGNITO_APP_SECRET}
     

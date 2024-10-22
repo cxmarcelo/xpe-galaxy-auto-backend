@@ -1,13 +1,15 @@
-FROM openjdk:17
+FROM maven:3.9.6-eclipse-temurin-22-jammy
 
-RUN groupadd -r appgroup && useradd -r -g appgroup appuser
+COPY pom.xml .
 
-USER appuser:appgroup
+COPY src ./src
 
-WORKDIR /app
+RUN mvn clean install -DskipTests
 
-COPY target/template.jar .
+FROM openjdk:17-jdk-slim
+
+COPY --from=0 /target/*.jar app.jar
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "template.jar"]
+CMD ["java", "-jar", "app.jar"]
