@@ -31,6 +31,7 @@ import br.com.mcb.galaxyauto.entities.CarEntity;
 import br.com.mcb.galaxyauto.exceptions.FileUploadFailException;
 import br.com.mcb.galaxyauto.service.CarService;
 import br.com.mcb.galaxyauto.service.S3Service;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -44,6 +45,7 @@ public class CarController {
 	@Autowired 
 	private S3Service s3Service;
 
+    @Operation(summary = "Search All Cars", description = "Returns a car page.")
 	@GetMapping
 	public ResponseEntity<Page<CarDto>> getAllCars( 
 			@PageableDefault(page = 0, size = 24, sort = "createDate", direction = Direction.ASC) Pageable pageable) {
@@ -52,6 +54,7 @@ public class CarController {
 		return ResponseEntity.ok().body(pageDto);
 	}
 
+    @Operation(summary = "Search by id", description = "Returns a car.")
 	@GetMapping("/{carId}")
 	public ResponseEntity<CarDto> getOneCar(@PathVariable UUID carId) {
 		CarEntity carEntity = carService.findById(carId);
@@ -59,6 +62,7 @@ public class CarController {
 		return ResponseEntity.ok().body(carDto);
 	}
 
+    @Operation(summary = "Create car", description = "Creates and returns the car.")
 	@PostMapping
 	public ResponseEntity<CarDto> saveCar(@Valid @ModelAttribute CarCreateDto carCreateDto, @RequestParam("image") MultipartFile image) {
 		try {
@@ -74,6 +78,8 @@ public class CarController {
 		}
 	}
 
+    
+    @Operation(summary = "Update car by id", description = "Updates and returns the car.")
 	@PutMapping("/{carId}")
 	public ResponseEntity<CarDto> updateCar(@PathVariable UUID carId, @Validated @RequestBody @JsonView(CarDto.CarView.UpdateCar.class) CarDto carUpdateDto) {
 		CarEntity carEntity = carService.update(carId, carUpdateDto);
@@ -81,6 +87,7 @@ public class CarController {
 		return ResponseEntity.ok().body(carDto);
 	}
 
+    @Operation(summary = "Update image car by id", description = "Updates and returns the car image.")
 	@PutMapping("/{carId}/image")
 	public ResponseEntity<CarEntity> updateCarImage(@PathVariable UUID id, @RequestParam("file") MultipartFile image) {
 		this.carService.findById(id);
@@ -94,6 +101,7 @@ public class CarController {
 		}
 	}
 
+    @Operation(summary = "Delete car by id", description = "Delete a car.")
 	@DeleteMapping("/{carId}")
 	public ResponseEntity<Void> deleteCar(@PathVariable UUID carId) {
 		carService.delete(carId);

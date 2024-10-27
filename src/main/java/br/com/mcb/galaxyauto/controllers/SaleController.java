@@ -24,6 +24,7 @@ import br.com.mcb.galaxyauto.dto.SaleDto;
 import br.com.mcb.galaxyauto.dto.SaleUpdateDto;
 import br.com.mcb.galaxyauto.entities.SaleEntity;
 import br.com.mcb.galaxyauto.service.SaleService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -34,6 +35,7 @@ public class SaleController {
 	@Autowired
 	private SaleService saleService;
 
+	@Operation(summary = "Search all sales", description = "Returns a page of sales.")
 	@GetMapping
 	public ResponseEntity<Page<SaleDto>> getAllSales( 
 			@PageableDefault(page = 0, size = 24, sort = "createDate", direction = Direction.ASC) Pageable pageable) {
@@ -41,7 +43,8 @@ public class SaleController {
 		Page<SaleDto> pageDto = page.map(saleEntity -> new SaleDto(saleEntity));
 		return ResponseEntity.ok().body(pageDto);
 	}
-	
+
+	@Operation(summary = "Search all sales", description = "Returns a sale.")
 	@GetMapping("/{saleId}")
 	public ResponseEntity<SaleDto> getOneSale(@PathVariable UUID saleId) {
 		SaleEntity saleEntity = saleService.findById(saleId);
@@ -49,6 +52,7 @@ public class SaleController {
 		return ResponseEntity.ok().body(saleDto);
 	}
 
+	@Operation(summary = "Creates a sale.", description = "Creates a new sale with an available car.")
 	@PostMapping
 	public ResponseEntity<SaleDto> saveSale(@Valid @RequestBody SaleCreateDto saleCreateDto) {
 		String username = getUsernameFromToken();
@@ -57,6 +61,7 @@ public class SaleController {
 		return ResponseEntity.ok().body(saleDto);
 	}
 	
+	@Operation(summary = "Update sale", description = "Updates and returns a sale.")
 	@PutMapping("/{saleId}")
 	public ResponseEntity<SaleDto> updateSale(@PathVariable UUID saleId, @Valid @RequestBody SaleUpdateDto saleUpdateDto) {
 		SaleEntity saleEntity = saleService.update(saleId, saleUpdateDto);
@@ -64,6 +69,7 @@ public class SaleController {
 		return ResponseEntity.ok().body(saleDto);
 	}
 
+	@Operation(summary = "Approve sale", description = "Approves and return a sale.")
 	@PostMapping("/approve/{saleId}")
 	public ResponseEntity<SaleDto> approveSale(@PathVariable UUID saleId) {
 		SaleEntity saleEntity = saleService.approveSale(saleId);
@@ -71,6 +77,7 @@ public class SaleController {
 		return ResponseEntity.ok().body(saleDto);
 	}
 
+	@Operation(summary = "Reject sale", description = "Reject and return a sale.")
 	@PostMapping("/reject/{saleId}")
 	public ResponseEntity<SaleDto> rejectSale(@PathVariable UUID saleId) {
 		SaleEntity saleEntity = saleService.rejectSale(saleId);

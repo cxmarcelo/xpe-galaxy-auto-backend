@@ -24,6 +24,7 @@ import br.com.mcb.galaxyauto.dto.SaleDto;
 import br.com.mcb.galaxyauto.entities.SaleEntity;
 import br.com.mcb.galaxyauto.service.SaleCommissionService;
 import br.com.mcb.galaxyauto.service.xls.exports.SaleCommissionExport;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/sales/commissions")
@@ -36,6 +37,7 @@ public class SaleCommissionController {
 	@Autowired 
 	private SaleCommissionExport saleCommissionExport;
 
+	@Operation(summary = "Search all sales commission", description = "Returns a page of sales commission.")
 	@GetMapping
 	public ResponseEntity<Page<SaleDto>> getAllSales( 
 			@PageableDefault(page = 0, size = 24, sort = "createDate", direction = Direction.ASC) Pageable pageable) {
@@ -44,6 +46,7 @@ public class SaleCommissionController {
 		return ResponseEntity.ok().body(pageDto);
 	}
 
+	@Operation(summary = "Export sales commision", description = "Returns a xls file with sales commission.")
 	@GetMapping("/export")
 	public ResponseEntity<Resource> exportCommissions(
 			@PageableDefault(page = 0, size = 24, sort = "createDate", direction = Direction.ASC) Pageable pageable
@@ -57,6 +60,7 @@ public class SaleCommissionController {
 				.body(file);
 	}
 
+	@Operation(summary = "Update sales commision by xls", description = "Updates sales commission using a xls file.")
 	@PostMapping("/upload")
 	public ResponseEntity<List<SaleDto>> uplaodCommissionByXls(@RequestParam("file") MultipartFile file) {
 		List<SaleEntity> saleEntityList = saleCommissionService.uploadCommisionByXlsFile(file);
